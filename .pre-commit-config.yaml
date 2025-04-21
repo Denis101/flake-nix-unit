@@ -1,0 +1,7 @@
+repos:
+  - repo: https://github.com/kamadorueda/alejandra
+    rev: v4.0.0
+    hooks:
+      - id: alejandra
+      - id: alejandra-nix
+      - id: alejandra-system
