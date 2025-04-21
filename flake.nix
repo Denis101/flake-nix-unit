@@ -20,13 +20,6 @@
       repo = "nixpkgs";
       ref = "24.11";
     };
-    nix-unit = {
-      type = "github";
-      owner = "nix-community";
-      repo = "nix-unit";
-      ref = "v2.23.0";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     nix-fmt = {
       type = "github";
       owner = "Denis101";
@@ -41,38 +34,41 @@
   outputs = {
     self,
     nixpkgs,
-    nix-unit,
     nix-fmt,
     flake-schemas,
     flake-utils,
     ...
   } @ inputs:
-   {
-    schemas = flake-schemas.schemas;
-    formatter = nix-fmt.formatter;
-  }
-  // flake-utils.lib.eachDefaultSystem (system: let
-    pkgs = import nixpkgs {inherit system;};
-    test-check = pkgs.stdenvNoCC.mkDerivation {
-      name = "test-check";
-      src = ./.;
-      dontBuild = true;
-      doCheck = true;
-      nativeBuildInputs = [ nix-unit.packages.${system}.default ];
-      checkPhase = ''
-        export HOME="$(realpath .)"
-        # The nix derivation must be able to find all used inputs in the nix-store because it cannot download it during buildTime.
-        nix-unit --eval-store "$HOME" \
-          --extra-experimental-features flakes \
-          --override-input nixpkgs ${pkgs} \
-          --flake ${self}#tests
-        touch $out
-      '';
-      installPhase = ''
-        mkdir "$out"
-      '';
-    };
-  in {
-    checks = {inherit test-check;};
-  });
+    {
+      schemas = flake-schemas.schemas;
+      formatter = nix-fmt.formatter;
+
+      tests = {
+        testPass = {
+          expr = 1;
+          expected = 1;
+        };
+      };
+    }
+    // flake-utils.lib.eachDefaultSystem (system: let
+      pkgs = import nixpkgs {inherit system;};
+      test-check = pkgs.stdenvNoCC.mkDerivation {
+        name = "test-check";
+        src = ./.;
+        dontBuild = true;
+        doCheck = true;
+        nativeBuildInputs = with pkgs; [nix-unit];
+        checkPhase = ''
+          export HOME="$(realpath .)"
+          nix-unit --eval-store "$HOME" \
+            --extra-experimental-features flakes \
+            --flake ${self}#tests
+        '';
+        installPhase = ''
+          mkdir "$out"
+        '';
+      };
+    in {
+      checks = {inherit test-check;};
+    });
 }
