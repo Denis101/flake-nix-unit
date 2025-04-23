@@ -45,16 +45,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1745175362,
-        "narHash": "sha256-uqoaZNR4yfXkSFik+MLspdOzQzEOo+Jkf72KiXM0EEw=",
+        "lastModified": 1745443143,
+        "narHash": "sha256-8mAEElmDFE/cAaX11ObzyRSGOvxbn15X986FuAr7aQE=",
         "owner": "Denis101",
         "repo": "flake-nix-fmt",
-        "rev": "5a18a62ddcbf0cfc50219bdb2989e3fadbd0df33",
+        "rev": "e47e27ac9127854cd1ec19b574cb7be1f4a7b2c1",
         "type": "github"
       },
       "original": {
         "owner": "Denis101",
-        "ref": "0.0.2",
+        "ref": "0.0.3",
         "repo": "flake-nix-fmt",
         "type": "github"
       }

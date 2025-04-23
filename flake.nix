@@ -24,7 +24,7 @@
       type = "github";
       owner = "Denis101";
       repo = "flake-nix-fmt";
-      ref = "0.0.2";
+      ref = "0.0.3";
       inputs.flake-schemas.follows = "flake-schemas";
       inputs.flake-utils.follows = "flake-utils";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -42,6 +42,7 @@
     {
       schemas = flake-schemas.schemas;
       formatter = nix-fmt.formatter;
+      lib = import ./lib.nix inputs;
 
       tests = {
         testPass = {
@@ -52,23 +53,16 @@
     }
     // flake-utils.lib.eachDefaultSystem (system: let
       pkgs = import nixpkgs {inherit system;};
-      test-check = pkgs.stdenvNoCC.mkDerivation {
-        name = "test-check";
-        src = ./.;
-        dontBuild = true;
-        doCheck = true;
-        nativeBuildInputs = with pkgs; [nix-unit];
-        checkPhase = ''
-          export HOME="$(realpath .)"
-          nix-unit --eval-store "$HOME" \
-            --extra-experimental-features flakes \
-            --flake ${self}#tests
-        '';
-        installPhase = ''
-          mkdir "$out"
-        '';
-      };
     in {
-      checks = {inherit test-check;};
+      checks = {
+        fmt = nix-fmt.checks.${system}.fmt;
+        test = self.lib.mkTestDerivation {
+          self = self;
+          src = ./.;
+        };
+      };
+      devShells.default = pkgs.mkShellNoCC {
+        packages = with pkgs; [alejandra nix-unit];
+      };
     });
 }
