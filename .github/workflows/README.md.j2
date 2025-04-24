@@ -1,0 +1,15 @@
+# flake-nix-unit
+
+{% if nix_flake_metadata is defined %}
+<details>
+  <summary>nix flake metadata</summary>
+  {{nix_flake_metadata}}
+</details>
+{% endif %}
+
+{%if nix_flake_show is defined %}
+<details>
+  <summary>nix flake show</summary>
+  {{nix_flake_show}}
+</details>
+{% endif %}
