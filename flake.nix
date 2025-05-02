@@ -12,13 +12,12 @@
       type = "github";
       owner = "numtide";
       repo = "flake-utils";
-      ref = "refs/tags/v1.0.0";
     };
     nix-fmt = {
       type = "github";
       owner = "Denis101";
       repo = "flake-nix-fmt";
-      ref = "0.0.5";
+      ref = "0.0.6";
       inputs.flake-schemas.follows = "flake-schemas";
       inputs.flake-utils.follows = "flake-utils";
       inputs.nixpkgs.follows = "nixpkgs";
