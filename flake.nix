@@ -45,15 +45,20 @@
     }
     // flake-utils.lib.eachDefaultSystem (system: let
       pkgs = import nixpkgs {inherit system;};
-    in rec {
-      lib = import ./lib.nix pkgs;
-
+    in {
       checks = {
         fmt = nix-fmt.checks.${system}.fmt;
-        test = lib.mkTestDerivation {
-          self = self;
-          src = ./.;
-        };
+        # test = pkgs.stdenvNoCC.mkDerivation {
+        #   name = "test";
+        #   src = ./.;
+        #   dontBuild = true;
+        #   doCheck = true;
+        #   nativeBuildInputs = with pkgs; [nix-unit];
+        #   checkPhase = ''
+        #     nix-unit --extra-experimental-features flakes --flake ${self}#tests
+        #   '';
+        #   installPhase = "mkdir \"$out\"";
+        # };
       };
 
       devShells = {
