@@ -1,15 +1,59 @@
 # flake-nix-unit
 
-{% if nix_flake_metadata is defined %}
-<details>
-  <summary>nix flake metadata</summary>
-  {{nix_flake_metadata}}
-</details>
-{% endif %}
+![check actions](https://github.com/denis101/flake-nix-unit/actions/workflows/check.yml/badge.svg)
 
-{%if nix_flake_show is defined %}
-<details>
-  <summary>nix flake show</summary>
-  {{nix_flake_show}}
+- :page_with_curl: {{description}}
+- :watch: Last updated at {{lastModified | ctime}}
+- :hash: `{{locked.narHash}}`
+
+{% if tags is defined %}
+## Releases
+
+{% for tag in tags | sort(reverse=True) %}- :label: `{{tag}}`{% if loop.index == 1 %} :sparkle:{% endif %}
+{% endfor %}{% endif %}
+## Inputs
+
+{% for input_name in locks.nodes.keys() %}- :arrow_right: {{input_name}}
+{% endfor %}
+
+## Outputs
+{% if checks is defined %}
+<details><summary>checks</summary>
+
+### checks
+
+{% for check in checks.values() | first %}- :heavy_check_mark: {{check}}
+{% endfor %}
+
+### systems
+
+{% for system in checks.keys() %}- :computer: {{system}}
+{% endfor %}
+
+</details>{% endif %}{% if devShells is defined %}
+<details><summary>devShells</summary>
+
+### devShells
+
+{% for devShell in devShells.values() | first %}- :pager: {{devShell}}
+{% endfor %}
+
+### systems
+
+{% for system in devShells.keys() %}- :computer: {{system}}
+{% endfor %}
+
 </details>
-{% endif %}
+{% endif %}{% if formatter is defined %}
+<details><summary>formatter</summary>
+
+### formatters
+
+- :pager: {{(formatter.values() | first).name}}
+
+### systems
+
+{% for system in formatter.keys() %}- :computer: {{system}}
+{% endfor %}
+
+</details>{% endif %}

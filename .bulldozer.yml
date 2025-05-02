@@ -1,0 +1,15 @@
+# not currently in use, I need to configure a bulldozer app first :)
+version: 1
+merge:
+  trigger:
+    labels: ["ready"]
+    auto_merge: true
+  method: squash
+  options:
+    squash:
+      title: "pull_request_title"
+      body: "summarize_commits"
+  required_statuses:
+    - "nix/check"
+  delete_after_merge: true
+  allow_merge_with_no_checks: false

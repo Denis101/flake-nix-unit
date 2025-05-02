@@ -1,14 +1,14 @@
-{nixpkgs}: {
+{pkgs, ...}: {
   mkTestDerivation = {
     self,
     src,
   }:
-    nixpkgs.stdenvNoCC.mkDerivation {
+    pkgs.stdenvNoCC.mkDerivation {
       name = "test";
       src = src;
       dontBuild = true;
       doCheck = true;
-      nativeBuildInputs = with nixpkgs; [nix-unit];
+      nativeBuildInputs = with pkgs; [nix-unit];
       checkPhase = ''
         export HOME="$(realpath .)"
         nix-unit --eval-store "$HOME" \
